@@ -8,6 +8,7 @@ namespace Littler\Kernel\Command\Generator;
 
 use Hyperf\Command\Annotation\Command;
 use Hyperf\Devtool\Generator\GeneratorCommand;
+use Nette\PhpGenerator\PhpFile;
 
 /**
  * @Command
@@ -15,57 +16,56 @@ use Hyperf\Devtool\Generator\GeneratorCommand;
 #[Command]
 class FactoryCommand extends GeneratorCommand
 {
+    use GenTrait;
+
+    protected $layout = 'Factory';
+
     public function __construct()
     {
         parent::__construct('gen:factory');
-        $this->setDescription('Create a new interface class');
+        $this->setDescription('Create a new Factory class');
     }
 
     /**
-     * Build the class with the given name.
+     * 获取内容.
      *
-     * @param string $name
-     * @return string
+     * @param mixed $name
      */
-    protected function buildClass($name)
+    protected function getContent($name)
     {
-        $stub = file_get_contents($this->getStub());
-        $stub = $this->replaceService($stub, $name);
-        return $this->replaceNamespace($stub, $name)->replaceClass($stub, $name);
-    }
+        $use = [
+            'Value' => \Hyperf\Config\Annotation\Value::class,
+        ];
 
-    /**
-     * Replace the class name for the given stub.
-     *
-     * @param string $stub
-     * @param string $name
-     * @return string
-     */
-    protected function replaceService(&$stub, $name)
-    {
-        $service = str_replace('Factory', 'Service', str_replace($this->getNamespace($name) . '\\', '', $name));
-        $serviceClass = str_replace('Factory', 'Service', $name);
-        $stub = str_replace('%SERVICECLASS%', $serviceClass, $stub);
-        return str_replace('%SERVICE%', $service, $stub);
-    }
+        $classNamespace = $this->getNamespace($name);
+        $className = str_replace($classNamespace . '\\', '', $name);
+        $serviceName = $this->getNameInput('Service');
+        $serviceClass = $this->qualifyClass($serviceName, 'Service');
+        $content = new PhpFile();
+        $content->setStrictTypes();
+        $namespace = $content->addNamespace($classNamespace);
+        $namespace->addUse($serviceClass);
+        foreach ($use as $useClass) {
+            $namespace->addUse($useClass);
+        }
+        $class = $namespace->addClass($className);
+        $class->addProperty('enableCache')
+            ->addAttribute(\Hyperf\Config\Annotation\Value::class, ['cache.enable', false]);
+        $class->addMethod('__invoke')
+            ->setReturnType($serviceClass)
+            ->setReturnNullable()
+            ->setBody(
+                str_replace(
+                    '%CLASS%',
+                    $serviceName,
+                    <<<'EOF'
+                    $enableCache = $this->enableCache ?? false;
+                    return make(%CLASS%::class, compact('enableCache'));
+                    EOF
+                )
+            );
 
-    protected function getStub(): string
-    {
-        return $this->getConfig()['stub'] ?? __DIR__ . '/stubs/factory.stub';
-    }
-
-    /**
-     * Get the desired class name from the input.
-     *
-     * @return string
-     */
-    protected function getNameInput()
-    {
-        return trim($this->input->getArgument('name')) . 'Factory';
-    }
-
-    protected function getDefaultNamespace(): string
-    {
-        return $this->getConfig()['namespace'] ?? 'App\\Factory';
+        // echo $content;
+        return $content;
     }
 }

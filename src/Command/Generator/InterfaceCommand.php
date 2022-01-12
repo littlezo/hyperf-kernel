@@ -8,6 +8,7 @@ namespace Littler\Kernel\Command\Generator;
 
 use Hyperf\Command\Annotation\Command;
 use Hyperf\Devtool\Generator\GeneratorCommand;
+use Nette\PhpGenerator\PhpFile;
 
 /**
  * @Command
@@ -15,29 +16,41 @@ use Hyperf\Devtool\Generator\GeneratorCommand;
 #[Command]
 class InterfaceCommand extends GeneratorCommand
 {
+    use GenTrait;
+
+    protected $layout = 'Interface';
+
     public function __construct()
     {
         parent::__construct('gen:interface');
-        $this->setDescription('Create a new interface class');
-    }
-
-    protected function getStub(): string
-    {
-        return $this->getConfig()['stub'] ?? __DIR__ . '/stubs/interface.stub';
+        $this->setDescription('Create a new Interface class');
     }
 
     /**
-     * Get the desired class name from the input.
+     * 获取内容.
      *
-     * @return string
+     * @param mixed $name
      */
-    protected function getNameInput()
+    protected function getContent($name)
     {
-        return trim($this->input->getArgument('name')) . 'Interface';
-    }
+        $classNamespace = $this->getNamespace($name);
+        $className = str_replace($classNamespace . '\\', '', $name);
 
-    protected function getDefaultNamespace(): string
-    {
-        return $this->getConfig()['namespace'] ?? 'App\\Interface';
+        $content = new PhpFile();
+        $content->setStrictTypes();
+        $namespace = $content->addNamespace($classNamespace);
+
+        $class = $namespace->addClass($className);
+        $class->setInterface();
+        $method = $class->addMethod('debug')
+            ->addComment('调试')
+            ->addComment('@param array $args 传入参数')
+            ->addComment('@return mixed')
+            ->setPublic()
+            ->setReturnType('mixed')
+            ->setReturnNullable();
+        $method->addParameter('args', null)
+            ->setType('array');
+        return $content;
     }
 }

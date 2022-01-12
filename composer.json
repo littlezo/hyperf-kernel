@@ -19,10 +19,12 @@
     },
     "require": {
         "php": ">=7.3",
-        "hyperf/framework": "2.2.*",
-        "hyperf/di": "2.2.*",
         "hyperf/command": "2.2.*",
-        "hyperf/devtool": "2.2.*"
+        "hyperf/devtool": "2.2.*",
+        "hyperf/di": "2.2.*",
+        "hyperf/framework": "2.2.*",
+        "nette/php-generator": "^3.6",
+        "nikic/php-parser": "^4.13"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^3.0",

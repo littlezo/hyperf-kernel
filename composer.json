@@ -32,8 +32,6 @@
         "swoole/ide-helper": "^4.5",
         "swow/swow": "dev-develop"
     },
-    "minimum-stability": "dev",
-    "prefer-stable": true,
     "config": {
         "optimize-autoloader": true,
         "sort-packages": true

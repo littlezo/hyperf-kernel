@@ -2,12 +2,7 @@
 
 declare(strict_types=1);
 /**
- * This file is part of Hyperf.
- *
- * @link     https://www.hyperf.io
- * @document https://hyperf.wiki
- * @contact  group@hyperf.io
- * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
+ * @author @小小只^v^ <littlezov@qq.com>
  */
 namespace Littler\Kernel\Command\Generator;
 
@@ -35,6 +30,14 @@ trait GenTrait
             $layout = $this->layout;
         }
         return trim($this->input->getArgument('name')) . $layout ?? $this->layout;
+    }
+
+    protected function getPrefix()
+    {
+        if ($prefix = $this->input->getOption('prefix')) {
+            return trim($prefix);
+        }
+        return 'api';
     }
 
     protected function qualifyClass($name, $layout = null)
@@ -72,6 +75,7 @@ trait GenTrait
             ['interface', 'i', InputOption::VALUE_NONE, '是否生成接口'],
             ['factory', 'f', InputOption::VALUE_NONE, '是否生成工程类'],
             ['controller', 'c', InputOption::VALUE_NONE, '是否生成控制器'],
+            ['prefix', 'P', InputOption::VALUE_OPTIONAL, '路由前缀'],
         ];
     }
 }

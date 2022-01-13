@@ -2,17 +2,13 @@
 
 declare(strict_types=1);
 /**
- * This file is part of Hyperf.
- *
- * @link     https://www.hyperf.io
- * @document https://hyperf.wiki
- * @contact  group@hyperf.io
- * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
+ * @author @小小只^v^ <littlezov@qq.com>
  */
 namespace Littler\Kernel\Command\Generator;
 
 use Hyperf\Command\Annotation\Command;
 use Hyperf\Devtool\Generator\GeneratorCommand;
+use Hyperf\Di\Annotation\Inject;
 use Hyperf\Utils\Str;
 use Nette\PhpGenerator\PhpFile;
 
@@ -72,8 +68,10 @@ class ServiceCommand extends GeneratorCommand
             $class->addProperty(Str::snake($kay_name))
                 ->setProtected()
                 // ->addAttribute($value)
-                ->addComment('@Inject()')
-                ->addComment('@var ' . $namespace->simplifyName($value));
+                ->addAttribute(Inject::class)
+                ->setType($value);
+            // ->addComment('@Inject()')
+                // ->addComment('@var ' . $namespace->simplifyName($value));
         }
         $method = $class->addMethod('debug')
             ->addComment('调试')

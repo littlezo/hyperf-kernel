@@ -9,6 +9,8 @@ namespace Littler\Kernel\Command\Generator;
 use Hyperf\Command\Annotation\Command;
 use Hyperf\Command\Command as HyperfCommand;
 use Hyperf\Utils\Str;
+use Nette\PhpGenerator\Dumper;
+use Nette\PhpGenerator\PhpFile;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -88,8 +90,14 @@ class ServicesCommand extends HyperfCommand
         }
         $this->call('gen:service', $args);
 
-        // var_dump($this->name, $this->root, $this->module, $this->getDefaultNamespace());
-        // $this->getDefaultNamespace()
+        $content = new PhpFile();
+        $file = PhpFile::fromCode(file_get_contents(BASE_PATH . '/config/autoload/dependencies.php'));
+        echo $file;
+        $content->setStrictTypes();
+        $dumper = new Dumper();
+        // $content->setBody('return [...?];', [$items]);
+        // $service_content = sprintf('<?php' . PHP_EOL . PHP_EOL . 'return %s;', $dumper->dump($service));
+        echo $content;
     }
 
     protected function getArguments()

@@ -77,9 +77,10 @@ class ControllerCommand extends GeneratorCommand
         $class->addAttribute(Controller::class, ['prefix' => "/{$prefix}/{$nameInput}"]);
         $class->addProperty($nameInput)
             ->setProtected()
-            // ->addAttribute($injectClass)
-            ->addComment('@Inject()')
-            ->addComment('@var ' . $injectName);
+            ->addAttribute(Inject::class)
+            ->setType($injectClass);
+        // ->addComment('@Inject()')
+        // ->addComment('@var ' . $injectName)
 
         $method = $class->addMethod('debug')
             // ->setReturnType($nameInput)
@@ -98,7 +99,7 @@ class ControllerCommand extends GeneratorCommand
             ->setType(RequestInterface::class);
         $method->addParameter('response')
             ->setType(ResponseInterface::class);
-        // echo $content;
+        echo $content;
         return $content;
     }
 }

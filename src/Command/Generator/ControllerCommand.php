@@ -99,7 +99,7 @@ class ControllerCommand extends GeneratorCommand
             ->setType(RequestInterface::class);
         $method->addParameter('response')
             ->setType(ResponseInterface::class);
-        echo $content;
+        // echo $content;
         return $content;
     }
 }

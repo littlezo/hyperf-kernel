@@ -7,7 +7,6 @@ declare(strict_types=1);
 namespace Littler\Kernel;
 
 use Firstphp\Wsdebug\Wsdebug;
-use Hyperf\Cache\Annotation\Cacheable;
 use Hyperf\Contract\PaginatorInterface;
 use Hyperf\Di\Annotation\Inject;
 use Hyperf\HttpServer\Contract\RequestInterface;
@@ -18,36 +17,20 @@ use Psr\SimpleCache\CacheInterface;
 
 abstract class AbstractController
 {
-    /**
-     * @Inject
-     * @var Wsdebug
-     */
-    protected $debug;
+    #[Inject]
+    protected Wsdebug $debug;
 
-    /**
-     * @Inject
-     * @var ContainerInterface
-     */
-    protected $container;
+    #[Inject]
+    protected ContainerInterface $container;
 
-    /**
-     * @Inject
-     * @var RequestInterface
-     */
-    protected $request;
+    #[Inject]
+    protected RequestInterface $request;
 
-    /**
-     * @Inject
-     * @var ResponseInterface
-     */
-    protected $response;
+    #[Inject]
+    protected ResponseInterface $response;
 
-    /**
-     * @Inject
-     * @var CacheInterface
-     *@var Cacheable
-     */
-    protected $cache;
+    #[Inject]
+    protected CacheInterface $cache;
 
     public function __construct()
     {

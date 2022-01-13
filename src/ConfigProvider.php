@@ -42,14 +42,17 @@ class ConfigProvider
                 $config_paths[] = $file->getRealPath() . '/';
             }
         }
-        $finder = new Finder();
-        $finder->files()->ignoreUnreadableDirs()->in($config_paths)->name('*.php');
+        if ($config_paths) {
+            $finder = new Finder();
+            $finder->files()->ignoreUnreadableDirs()->in($config_paths)->name('*.php');
 
-        foreach ($finder as $file);
-        if (is_array(require $file->getRealPath())) {
-            $configs[] = [
-                $file->getBasename('.php') => require $file->getRealPath(),
-            ];
+            foreach ($finder as $file) {
+                if (file_exists($file->getRealPath()) && is_array(require $file->getRealPath())) {
+                    $configs[] = [
+                        $file->getBasename('.php') => require $file->getRealPath(),
+                    ];
+                }
+            }
         }
 
         return is_array($configs) ? $configs : [];

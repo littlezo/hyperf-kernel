@@ -18,6 +18,7 @@ trait GenTrait
      */
     protected function buildClass($name)
     {
+        // var_dump($name);
         return $this->getContent($name);
     }
 

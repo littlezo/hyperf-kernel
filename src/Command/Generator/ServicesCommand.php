@@ -8,9 +8,9 @@ namespace Littler\Kernel\Command\Generator;
 
 use Hyperf\Command\Annotation\Command;
 use Hyperf\Command\Command as HyperfCommand;
+use Hyperf\Utils\CodeGen\Project;
 use Hyperf\Utils\Str;
 use Nette\PhpGenerator\Dumper;
-use Nette\PhpGenerator\PhpFile;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -60,7 +60,6 @@ class ServicesCommand extends HyperfCommand
         if ($root = $this->input->getOption('namespace')) {
             $this->root = trim($root);
         }
-        var_dump($root);
         if ($module = $this->input->getOption('module')) {
             $this->module = Str::studly(trim($module));
         }
@@ -90,14 +89,37 @@ class ServicesCommand extends HyperfCommand
         }
         $this->call('gen:service', $args);
 
-        $content = new PhpFile();
-        $file = PhpFile::fromCode(file_get_contents(BASE_PATH . '/config/autoload/dependencies.php'));
-        echo $file;
-        $content->setStrictTypes();
         $dumper = new Dumper();
-        // $content->setBody('return [...?];', [$items]);
-        // $service_content = sprintf('<?php' . PHP_EOL . PHP_EOL . 'return %s;', $dumper->dump($service));
-        echo $content;
+
+        $content = '<?php' . PHP_EOL . PHP_EOL . 'return [];';
+        $dependenciesName = $this->getDefaultNamespace() . '\\config\\dependencies';
+        $dependenciesPath = $this->getPath($dependenciesName);
+        if (! file_exists($dependenciesPath)) {
+            $this->makeDirectory($dependenciesPath);
+            file_put_contents($dependenciesPath, $content);
+        }
+        $dependencie = require $dependenciesPath;
+
+        $interface = $this->qualifyClass('Interface');
+        if ($this->input->getOption('factory')) {
+            $factory = $this->qualifyClass('Factory');
+        } else {
+            $factory = $this->qualifyClass('Service');
+        }
+
+        $dependencies = $dependencie;
+
+        // foreach ($dependencie as $key => $value) {
+        //     if (class_exists($key) && class_exists($value)) {
+        //         $dependencies[$key] = $value;
+        //     }
+        // }
+        $dependencies[$interface] = $factory;
+
+        $content = sprintf('<?php' . PHP_EOL . PHP_EOL . 'return %s;', $dumper->dump($dependencies));
+        file_put_contents($dependenciesPath, $content);
+
+        $this->output->writeln(sprintf('<info>%s</info>', $dependenciesName . ' write successfully.'));
     }
 
     protected function getArguments()
@@ -120,8 +142,49 @@ class ServicesCommand extends HyperfCommand
         ];
     }
 
+    protected function qualifyClass($layout)
+    {
+        $name = $this->name;
+
+        $name = str_replace('/', '\\', $name);
+        var_dump($name);
+
+        $namespace = $this->input->getOption('namespace');
+        if (empty($namespace)) {
+            $namespace = $this->getDefaultNamespace();
+        }
+        return $namespace . "\\{$layout}\\" . $name . $layout;
+    }
+
     protected function getDefaultNamespace(): string
     {
         return $this->root . '\\' . $this->module;
+    }
+
+    /**
+     * Get the destination class path.
+     *
+     * @param string $name
+     * @return string
+     */
+    protected function getPath($name)
+    {
+        $project = new Project();
+        return BASE_PATH . '/' . $project->path($name);
+    }
+
+    /**
+     * Build the directory for the class if necessary.
+     *
+     * @param string $path
+     * @return string
+     */
+    protected function makeDirectory($path)
+    {
+        if (! is_dir(dirname($path))) {
+            mkdir(dirname($path), 0777, true);
+        }
+
+        return $path;
     }
 }

@@ -82,7 +82,7 @@ class ServicesCommand extends HyperfCommand
             $this->call('gen:factory', $args);
         }
         if ($args['--controller']) {
-            $this->call('gen:controller', $args);
+            $this->call('gen:controllers', $args);
         }
         $this->call('gen:service', $args);
 

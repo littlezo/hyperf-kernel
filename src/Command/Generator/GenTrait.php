@@ -2,7 +2,12 @@
 
 declare(strict_types=1);
 /**
- * @author @小小只^v^ <littlezov@qq.com>
+ * This file is part of Hyperf.
+ *
+ * @link     https://www.hyperf.io
+ * @document https://hyperf.wiki
+ * @contact  group@hyperf.io
+ * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
 namespace Littler\Kernel\Command\Generator;
 
@@ -21,8 +26,11 @@ trait GenTrait
         return $this->getContent($name);
     }
 
-    protected function getNameInput($layout = null)
+    protected function getNameInput($layout = null, $ext = false)
     {
+        if ($ext) {
+            return trim($this->input->getArgument('name'));
+        }
         if (! $layout) {
             $layout = $this->layout;
         }

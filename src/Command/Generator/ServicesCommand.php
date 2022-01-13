@@ -2,7 +2,12 @@
 
 declare(strict_types=1);
 /**
- * @author @小小只^v^ <littlezov@qq.com>
+ * This file is part of Hyperf.
+ *
+ * @link     https://www.hyperf.io
+ * @document https://hyperf.wiki
+ * @contact  group@hyperf.io
+ * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
 namespace Littler\Kernel\Command\Generator;
 
@@ -73,6 +78,7 @@ class ServicesCommand extends HyperfCommand
             '--interface' => $this->input->getOption('interface') ?? false,
             '--factory' => $this->input->getOption('factory') ?? false,
             '--controller' => $this->input->getOption('controller') ?? false,
+            '--prefix' => $this->input->getOption('prefix') ?? false,
         ];
 
         if ($args['--interface']) {
@@ -106,6 +112,7 @@ class ServicesCommand extends HyperfCommand
             ['interface', 'i', InputOption::VALUE_NONE, '是否生成接口'],
             ['factory', 'f', InputOption::VALUE_NONE, '是否生成工程类'],
             ['controller', 'c', InputOption::VALUE_NONE, '是否生成控制器'],
+            ['path', 'P', InputOption::VALUE_NONE, '是否生成控制器'],
         ];
     }
 

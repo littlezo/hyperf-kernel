@@ -58,6 +58,7 @@ class ServicesCommand extends HyperfCommand
         if ($root = $this->input->getOption('namespace')) {
             $this->root = trim($root);
         }
+        var_dump($root);
         if ($module = $this->input->getOption('module')) {
             $this->module = Str::studly(trim($module));
         }

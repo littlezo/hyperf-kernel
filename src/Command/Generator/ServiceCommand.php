@@ -2,7 +2,12 @@
 
 declare(strict_types=1);
 /**
- * @author @小小只^v^ <littlezov@qq.com>
+ * This file is part of Hyperf.
+ *
+ * @link     https://www.hyperf.io
+ * @document https://hyperf.wiki
+ * @contact  group@hyperf.io
+ * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
 namespace Littler\Kernel\Command\Generator;
 
@@ -66,7 +71,7 @@ class ServiceCommand extends GeneratorCommand
             $kay_name = str_replace('Service', '', $kay_name);
             $class->addProperty(Str::snake($kay_name))
                 ->setProtected()
-                ->addAttribute($value)
+                // ->addAttribute($value)
                 ->addComment('@Inject()')
                 ->addComment('@var ' . $namespace->simplifyName($value));
         }

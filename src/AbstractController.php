@@ -7,6 +7,7 @@ declare(strict_types=1);
 namespace Littler\Kernel;
 
 use Firstphp\Wsdebug\Wsdebug;
+use Hyperf\Config\Annotation\Value;
 use Hyperf\Contract\PaginatorInterface;
 use Hyperf\Di\Annotation\Inject;
 use Hyperf\HttpServer\Contract\RequestInterface;
@@ -32,6 +33,9 @@ abstract class AbstractController
     #[Inject]
     protected CacheInterface $cache;
 
+    #[Value('app_env')]
+    protected $app_env;
+
     public function __construct()
     {
         $container = ApplicationContext::getContainer();
@@ -42,30 +46,30 @@ abstract class AbstractController
         $this->cache = $cache;
     }
 
-    public function success($data = [], $msg = 'success', $code = 200)
+    public function success($data = [], $message = 'success', $code = 200)
     {
         if ($data instanceof PaginatorInterface) {
             return $this->response->json([
                 'code' => $code,
                 'type' => 'successed',
+                'is_debug' => $this->app_env,
                 'timestamp' => time(),
                 'data' => [
-                    // 'current_page' => $data->current_page,
-                    // 'data' => $data->data,
-                    // 'last_page' => $data->last_page,
-                    // 'current_page' => $data->current_page,
-                    // 'total' => $data->total,
-                    'orgin' => $data,
+                    'current' => $data->currentPage(),
+                    'last' => $data->lastPage(),
+                    'total' => $data->total(),
+                    'data' => $data->items(),
                 ],
-                'message' => $msg,
+                'message' => $message,
             ]);
         }
         return $this->response->json([
             'code' => $code,
             'type' => 'successed',
+            'is_debug' => $this->app_env,
             'timestamp' => time(),
             'data' => $data ?: [],
-            'message' => $msg,
+            'message' => $message,
         ]);
     }
 

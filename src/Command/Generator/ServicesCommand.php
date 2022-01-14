@@ -92,7 +92,7 @@ class ServicesCommand extends HyperfCommand
         $dumper = new Dumper();
 
         $content = '<?php' . PHP_EOL . PHP_EOL . 'return [];';
-        $dependenciesName = $this->getDefaultNamespace() . '\\config\\dependencies';
+        $dependenciesName = $this->getDefaultNamespace() . '\\autoload\\dependencies';
         $dependenciesPath = $this->getPath($dependenciesName);
         if (! file_exists($dependenciesPath)) {
             $this->makeDirectory($dependenciesPath);
@@ -147,8 +147,7 @@ class ServicesCommand extends HyperfCommand
         $name = $this->name;
 
         $name = str_replace('/', '\\', $name);
-        var_dump($name);
-
+        // var_dump($name);
         $namespace = $this->input->getOption('namespace');
         if (empty($namespace)) {
             $namespace = $this->getDefaultNamespace();
@@ -158,7 +157,10 @@ class ServicesCommand extends HyperfCommand
 
     protected function getDefaultNamespace(): string
     {
-        return $this->root . '\\' . $this->module;
+        if ($this->module) {
+            return $this->root . '\\' . $this->module;
+        }
+        return $this->root;
     }
 
     /**

@@ -65,7 +65,7 @@ class ServiceCommand extends GeneratorCommand
             $kay_name = str_replace('Interface', '', $key);
             $kay_name = str_replace('Factory', '', $kay_name);
             $kay_name = str_replace('Service', '', $kay_name);
-            $class->addProperty(Str::snake($kay_name))
+            $class->addProperty(Str::camel($kay_name))
                 ->setProtected()
                 // ->addAttribute($value)
                 ->addAttribute(Inject::class)
@@ -75,9 +75,9 @@ class ServiceCommand extends GeneratorCommand
         }
         $method = $class->addMethod('debug')
             ->addComment('调试')
-            ->addComment('@param array $args 传入参数')
-            ->addComment('@return mixed')
-            ->setReturnType('mixed')
+            // ->addComment('@param array $args 传入参数')
+            // ->addComment('@return mixed')
+            // ->setReturnType('mixed')
             ->setPublic()
             ->setReturnNullable()
             ->setBody(

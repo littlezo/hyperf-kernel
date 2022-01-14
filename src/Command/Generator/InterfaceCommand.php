@@ -35,7 +35,7 @@ class InterfaceCommand extends GeneratorCommand
     {
         $classNamespace = $this->getNamespace($name);
         $className = str_replace($classNamespace . '\\', '', $name);
-
+        // var_dump($classNamespace, $className);
         $content = new PhpFile();
         $content->setStrictTypes();
         $namespace = $content->addNamespace($classNamespace);
@@ -43,11 +43,11 @@ class InterfaceCommand extends GeneratorCommand
         $class = $namespace->addClass($className);
         $class->setInterface();
         $method = $class->addMethod('debug')
-            ->addComment('调试')
-            ->addComment('@param array $args 传入参数')
-            ->addComment('@return mixed')
+            // ->addAttribute('调试')
+            // ->addComment('@param array $args 传入参数')
+            // ->addComment('@return mixed')
             ->setPublic()
-            ->setReturnType('mixed')
+            // ->setReturnType('mixed')
             ->setReturnNullable();
         $method->addParameter('args', null)
             ->setType('array');

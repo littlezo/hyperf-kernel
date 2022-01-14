@@ -71,10 +71,11 @@ class ControllerCommand extends GeneratorCommand
             $injectClass = $this->qualifyClass($injectName, 'Service');
             $namespace->addUse($injectClass);
         }
-        $nameInput = Str::snake($this->getNameInput('', true));
+        $nameInput = Str::camel($this->getNameInput('', true), );
+        $routePath = Str::snake($nameInput, '/');
         // 注入路由
         $prefix = $this->getPrefix();
-        $class->addAttribute(Controller::class, ['prefix' => "/{$prefix}/{$nameInput}"]);
+        $class->addAttribute(Controller::class, ['prefix' => "/{$prefix}/{$routePath}"]);
         $class->addProperty($nameInput)
             ->setProtected()
             ->addAttribute(Inject::class)

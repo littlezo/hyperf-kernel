@@ -44,17 +44,19 @@
         "hyperf/process": "~2.2.0",
         "hyperf/redis": "^2.2",
         "hyperf/resource": "^2.2",
+        "hyperf/signal": "^2.2",
         "hyperf/snowflake": "^2.2",
         "hyperf/tracer": "~2.2.0",
         "hyperf/validation": "^2.2",
         "hyperf/websocket-server": "^2.2",
         "nette/php-generator": "^3.6",
         "nikic/php-parser": "^4.13",
-        "symfony/var-dumper": "*",
-        "symfony/var-exporter": "*",
-        "symfony/string": "*",
+        "symfony/cache": "*",
         "symfony/cache-contracts": "*",
-        "symfony/cache": "*"
+        "symfony/serializer": "^6.0",
+        "symfony/string": "*",
+        "symfony/var-dumper": "*",
+        "symfony/var-exporter": "*"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^3.0",

@@ -55,10 +55,10 @@ abstract class AbstractController
                 'is_debug' => $this->app_env,
                 'timestamp' => time(),
                 'data' => [
-                    'current' => $data->currentPage(),
+                    'page' => $data->currentPage(),
                     'last' => $data->lastPage(),
                     'total' => $data->total(),
-                    'count' => $data->count(),
+                    'size' => $data->perPage(),
                     'first' => $data->onFirstPage(),
                     'more' => $data->hasMorePages(),
                     'data' => $data->items(),

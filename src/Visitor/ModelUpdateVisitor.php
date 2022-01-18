@@ -11,6 +11,22 @@ use Hyperf\Utils\Str;
 
 class ModelUpdateVisitor extends Visitor
 {
+    protected function getProperty($column): array
+    {
+        $name = $this->option->isCamelCase() ? Str::camel($column['column_name']) : $column['column_name'];
+        if (Str::endsWith($name, 'time')) {
+            $column['data_type'] = 'datetime';
+            $column['cast'] = 'datetime';
+            var_dump($name);
+        }
+
+        $type = $this->formatPropertyType($column['data_type'], $column['cast'] ?? null);
+
+        $comment = $this->option->isWithComments() ? $column['column_comment'] ?? '' : '';
+
+        return [$name, $type, $comment];
+    }
+
     protected function formatDatabaseType(string $type): ?string
     {
         switch ($type) {
@@ -30,6 +46,10 @@ class ModelUpdateVisitor extends Visitor
             case 'bool':
             case 'boolean':
                 return 'boolean';
+            case 'json':
+                return 'json';
+            case 'datetime':
+                return 'datetime';
             default:
                 return null;
         }
@@ -47,15 +67,16 @@ class ModelUpdateVisitor extends Visitor
             case 'date':
             case 'datetime':
                 return '\Carbon\Carbon';
-            case 'json':
-                return 'array';
         }
 
         if (Str::startsWith($cast, 'decimal')) {
             // 如果 cast 为 decimal，则 @property 改为 string
             return 'string';
         }
-
+        if (Str::startsWith($cast, 'json')) {
+            // 如果 cast 为 json @property 改为 array
+            return 'array';
+        }
         return $cast;
     }
 }

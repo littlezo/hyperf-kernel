@@ -33,7 +33,7 @@ abstract class BaseModel extends Model implements CacheableInterface
     protected $defaultSoftDelete = 0;
 
     /**
-     * 快速搜索.
+     * 排除不存在字段.
      *
      * @param array $params
      */
@@ -47,9 +47,8 @@ abstract class BaseModel extends Model implements CacheableInterface
         }
         $where = [];
         foreach ($params as $field => $value) {
-            // 排除不存在字段
-
-            if (in_array($field, array_keys($this->casts), true, )) {
+            // 排除不存在字段dd
+            if (in_array($field, $this->fillable, true, )) {
                 if (is_array($params[$field])) {
                     $where[] = [$field, $params[$field][0], $params[$field]];
                 } else {

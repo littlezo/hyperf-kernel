@@ -53,7 +53,6 @@
         "nikic/php-parser": "^4.13",
         "symfony/cache": "*",
         "symfony/cache-contracts": "*",
-        "symfony/serializer": "^6.0",
         "symfony/string": "*",
         "symfony/var-dumper": "*",
         "symfony/var-exporter": "*"

@@ -6,6 +6,7 @@ declare(strict_types=1);
  */
 namespace Littler\Kernel;
 
+use DateTimeInterface;
 use Hyperf\DbConnection\Model\Model;
 use Hyperf\Di\Annotation\Inject;
 use Hyperf\HttpServer\Contract\RequestInterface;
@@ -23,6 +24,8 @@ abstract class BaseModel extends Model implements CacheableInterface
     public const DELETED_AT = 'delete_time';
 
     public $timestamps = true;
+
+    protected $dateFormat = 'U';
 
     #[Inject]
     protected RequestInterface $request;
@@ -58,5 +61,15 @@ abstract class BaseModel extends Model implements CacheableInterface
         }
 
         return $where;
+    }
+
+    /**
+     * 为 array / JSON 序列化准备日期格式.
+     *
+     * @return string
+     */
+    protected function serializeDate(DateTimeInterface $date)
+    {
+        return $date->format('Y-m-d H:i:s');
     }
 }

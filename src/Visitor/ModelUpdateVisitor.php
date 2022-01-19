@@ -17,7 +17,7 @@ class ModelUpdateVisitor extends Visitor
         if (Str::endsWith($name, 'time')) {
             $column['data_type'] = 'datetime';
             $column['cast'] = 'datetime';
-            var_dump($name);
+            // var_dump($name);
         }
 
         $type = $this->formatPropertyType($column['data_type'], $column['cast'] ?? null);

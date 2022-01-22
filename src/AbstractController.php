@@ -22,8 +22,8 @@ use Psr\SimpleCache\CacheInterface;
 
 abstract class AbstractController
 {
-    #[Inject]
-    protected Wsdebug $debug;
+    // #[Inject]
+    // protected Wsdebug $debug;
 
     #[Inject]
     protected ContainerInterface $container;
@@ -54,7 +54,7 @@ abstract class AbstractController
         // 部分接口在请求数据时，会根据 guzzle_handler 重置 Handler
         $cache = $container->get(CacheInterface::class);
         $this->cache = $cache;
-        $this->headers += ['node' => env('hostname'), 'timestamp' => time()];
+        $this->headers += ['node' => swoole_get_local_ip()['eth0'], 'timestamp' => time()];
     }
 
     /**
